@@ -13,7 +13,8 @@ namespace np = boost::python::numpy;
 class ForPyInterface
 {
 private:
-    Integration *integration = new Integration(200, 200);
+    Integration *integration = new Integration();
+    integration->Setup(200, 200);
 
 public:
     ForJsInterface()
