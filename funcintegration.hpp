@@ -1,4 +1,10 @@
 
+
+#ifndef integration_include
+#define integration_include
+
+#include "stdload.hpp"
+
 class Integration
 {
 private:
@@ -93,7 +99,7 @@ public:
         m_b2 = m_y2 - (m_a2 * m_x2);
     }
 
-    vector<float> CalculationSpecific(float ratio) // 0 - 1
+    std::vector<float> CalculationSpecific(float ratio) // 0 - 1
     {
 
         float now_xA = m_x1 * ratio;
@@ -108,18 +114,17 @@ public:
 
         float yB = LinearFunction(cfX, cfA, cfB);
 
-        vector<float> result = {cfX, yb};
+        std::vector<float> result = {cfX, yB};
         return result;
     }
 
     void CalculationView()
     {
-
         for (float ri = 0; ri < m_x_width; ri++)
         {
             float ratio = (ri / m_x_width);
-            vector<float> result = CalculationSpecific(ratio);
-            draw_point(result[0], result[1], 20)
+            std::vector<float> result = CalculationSpecific(ratio);
+            draw_point(result[0], result[1], 20);
         }
     }
 
@@ -128,3 +133,5 @@ public:
         return m_draw;
     }
 };
+
+#endif
