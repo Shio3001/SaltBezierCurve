@@ -5,8 +5,8 @@ import forpy
 
 bezier_curve = forpy.ForPyInterface()
 
-bezier_curve.Setx1y1(90, 10)
-bezier_curve.Setx2y2(10, 90)
+bezier_curve.Setx1y1(0, 100)
+bezier_curve.Setx2y2(100, 50)
 image = bezier_curve.GetView().astype('uint8').reshape(200, 200, 1)
 
 print(image.shape)
