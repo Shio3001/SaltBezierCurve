@@ -24,10 +24,18 @@ private:
     float x2;
     float y2;
 
+    int width_size;
+    int height_size;
+
 public:
-    ForPyInterface()
+    ForPyInterface(int send_width_size, int send_height_size)
     {
-        integration_control->Setup(200, 200);
+        width_size = send_width_size;
+        height_size = send_height_size;
+
+        std::cout << width_size << " " << send_height_size << std::endl;
+
+        integration_control->Setup(width_size, height_size);
     }
     void Setx1y1(py::object send_x1, py::object send_y1)
     {
@@ -45,7 +53,7 @@ public:
         integration_control->CalculationView();
         int *draw = integration_control->GetView();
 
-        py::tuple shape = py::make_tuple(200 * 200);
+        py::tuple shape = py::make_tuple(width_size * height_size);
         py::tuple stride = py::make_tuple(sizeof(int));
         np::dtype dt = np::dtype::get_builtin<uint>();
         np::ndarray npdraw = np::from_data(&draw[0], dt, shape, stride, py::object());
@@ -62,7 +70,7 @@ BOOST_PYTHON_MODULE(forpy)
     Py_Initialize();
     np::initialize();
     py::class_<ForPyInterface>("ForPyInterface",
-                               py::init<>()) // VideoExecutionCenterコンストラクタへの引数型
+                               py::init<int, int>()) // ForPyInterfaceコンストラクタへの引数型
         .def("Setx1y1", &ForPyInterface::Setx1y1)
         .def("Setx2y2", &ForPyInterface::Setx2y2)
         .def("GetView", &ForPyInterface::GetView)
