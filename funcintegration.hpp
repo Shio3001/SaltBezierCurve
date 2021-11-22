@@ -38,13 +38,13 @@ private:
     {
         for (int yd = 0; yd < size; yd++)
         {
-            int ydp = y - (size / 2) + yd;
+            int ydp = m_y_hight - (y - (size / 2) + yd);
             for (int xd = 0; xd < size; xd++)
             {
                 int xdp = x - (size / 2) + xd;
                 int ipx = ydp * m_x_width + xdp;
 
-                if (ipx < m_y_hight * m_x_width)
+                if (0 < ipx && ipx < m_y_hight * m_x_width)
                 {
                     m_draw[ipx] = 255;
                 }
@@ -58,6 +58,7 @@ public:
     }
     ~Integration()
     {
+        delete[] m_draw;
     }
 
     void Setup(int send_x, int send_y)
@@ -86,6 +87,8 @@ public:
 
     void CalculationSetup(float send_x1, float send_y1, float send_x2, float send_y2) // 0 < x < 100 , 0 < y < 100
     {
+        std::cout << send_x1 << " " << send_y1 << " " << send_x2 << " " << send_y2 << std::endl;
+
         m_x1 = send_x1;
         m_y1 = send_y1;
 
@@ -97,22 +100,41 @@ public:
 
         m_b1 = 0;
         m_b2 = m_y2 - (m_a2 * m_x2);
+
+        std::cout << "CalculationSetup" << std::endl;
+        std::cout << m_a1 << std::endl;
+        std::cout << m_a2 << std::endl;
+        std::cout << m_b1 << std::endl;
+        std::cout << m_b2 << std::endl;
     }
 
     std::vector<float> CalculationSpecific(float ratio) // 0 - 1
     {
 
         float now_xA = m_x1 * ratio;
-        float now_xC = (m_maximum - m_x2) * ratio + m_maximum;
+        float now_xC = (m_maximum - m_x2) * ratio + m_x2;
 
         float yA = LinearFunction(now_xA, m_a1, m_b1);
         float yC = LinearFunction(now_xC, m_a2, m_b2);
 
-        float cfA = (yC - yA) / (now_xC - now_xA);
+        float cfA = (yC - yA) / (now_xC - now_xA + 0.00001);
         float cfB = yC - (cfA * now_xC);
-        float cfX = (yC - yA) * ratio + yA;
+        float cfX = (now_xC - now_xA) * ratio + now_xA;
 
         float yB = LinearFunction(cfX, cfA, cfB);
+
+        if (ratio == 0)
+        {
+            std::cout << "CalculationSpecific" << std::endl;
+            std::cout << ratio << std::endl;
+            std::cout << now_xA << " " << now_xC << std::endl;
+            std::cout << cfA << " " << cfB << " " << cfX << std::endl;
+            std::cout << yA << " " << yB << " " << yC << std::endl;
+        }
+
+        //std::cout << "CalculationSpecific" << std::endl;
+        //std::cout << ratio << std::endl;
+        //std::cout << cfA << " " << cfX << " " << yB << std::endl;
 
         std::vector<float> result = {cfX, yB};
         return result;
@@ -124,7 +146,7 @@ public:
         {
             float ratio = (ri / m_x_width);
             std::vector<float> result = CalculationSpecific(ratio);
-            draw_point(result[0], result[1], 20);
+            draw_point(result[0], result[1], 5);
         }
     }
 

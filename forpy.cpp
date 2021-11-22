@@ -6,6 +6,7 @@
 #include <boost/python.hpp>
 #include <boost/python/numpy.hpp>
 #include <iomanip>
+
 //using namespace std;
 namespace py = boost::python;
 namespace np = boost::python::numpy;
@@ -16,31 +17,32 @@ namespace np = boost::python::numpy;
 class ForPyInterface
 {
 private:
-    Integration *integration_control = new Integration;
-    integration_control->Setup(200, 200);
+    Integration *integration_control = new Integration();
 
-    int x1;
-    int y1;
-    int x2;
-    int y2;
+    float x1;
+    float y1;
+    float x2;
+    float y2;
 
 public:
     ForPyInterface()
     {
+        integration_control->Setup(200, 200);
     }
-    void Setx1y1(int send_x1, int send_y1)
+    void Setx1y1(py::object send_x1, py::object send_y1)
     {
-        x1 = send_x1;
-        y1 = send_y1;
+        x1 = py::extract<float>(send_x1);
+        y1 = py::extract<float>(send_y1);
     }
-    void Setx2y2(int send_x2, int send_y2)
+    void Setx2y2(py::object send_x2, py::object send_y2)
     {
-        x2 = send_x2;
-        y2 = send_y2;
+        x2 = py::extract<float>(send_x2);
+        y2 = py::extract<float>(send_y2);
     }
     np::ndarray GetView()
     {
         integration_control->CalculationSetup(x1, y1, x2, y2);
+        integration_control->CalculationView();
         int *draw = integration_control->GetView();
 
         py::tuple shape = py::make_tuple(200 * 200);
@@ -50,7 +52,7 @@ public:
 
         return npdraw;
     }
-    std::vector<int> GetCalculation()
+    np::ndarray GetCalculation()
     {
     }
 };
@@ -66,8 +68,8 @@ BOOST_PYTHON_MODULE(forpy)
         .def("GetView", &ForPyInterface::GetView)
         .def("GetCalculation", &ForPyInterface::GetCalculation);
 
-    boost::python::class_<std::vector<int>>("vector<int>")
-        .def(vector_indexing_suite<std::vector<int>>());
+    // py::class_<std::vector<int>>("std::vector<int>")
+    //     .def(vector_indexing_suite<std::vector<int>>());
     //.def("sta", &VideoExecutionCenter::sta)
     //.def("execution", &VideoExecutionCenter::execution)
     //.def("layer_interpretation", &VideoExecutionCenter::layer_interpretation);
