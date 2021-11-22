@@ -46,7 +46,7 @@ private:
                 int xdp = x - (size / 2) + xd;
                 int ipx = ydp * m_x_width + xdp;
 
-                if (0 < ipx && ipx < m_y_hight * m_x_width) //  && 0 <= xdp && 0 <= ydp && xdp < m_maximum && ydp < m_maximum
+                if (0 < ipx && ipx < m_y_hight * m_x_width && 0 <= xdp && 0 <= ydp && xdp < m_x_width && ydp < m_y_hight) 
                 {
                     m_draw[ipx] = 255;
                     count++;
