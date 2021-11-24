@@ -26,6 +26,8 @@ private:
     float m_b1;
     float m_b2;
 
+    float aspect;
+
     int m_maximum = 100;
 
     float LinearFunction(int x, float a, float b)
@@ -83,6 +85,10 @@ public:
         {
             m_points[j] = 0;
         }
+
+        aspect = (float)m_y_hight / m_x_width; //tanと一緒
+
+        std::cout << aspect << std::endl;
     }
     void DeleteDraw()
     {
@@ -128,7 +134,7 @@ public:
             float ratio = (ri / m_x_width);
             std::vector<float> result = CalculationSpecific(ratio);
 
-            result[1] *= m_y_hight / m_x_width;
+            result[1] *= aspect;
 
             draw_point(result[0], result[1], 5);
         }
