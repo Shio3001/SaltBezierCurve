@@ -46,14 +46,14 @@ private:
                 int xdp = x - (size / 2) + xd;
                 int ipx = ydp * m_x_width + xdp;
 
-                if (0 < ipx && ipx < m_y_hight * m_x_width && 0 <= xdp && 0 <= ydp && xdp < m_x_width && ydp < m_y_hight) 
+                if (0 < ipx && ipx < m_y_hight * m_x_width && 0 <= xdp && 0 <= ydp && xdp < m_x_width && ydp < m_y_hight)
                 {
                     m_draw[ipx] = 255;
                     count++;
                 }
             }
         }
-        std::cout << count << std::endl;
+        //std::cout << count << std::endl;
     }
 
 public:
@@ -127,6 +127,9 @@ public:
         {
             float ratio = (ri / m_x_width);
             std::vector<float> result = CalculationSpecific(ratio);
+
+            result[1] *= m_y_hight / m_x_width;
+
             draw_point(result[0], result[1], 5);
         }
     }

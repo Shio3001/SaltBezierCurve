@@ -65,7 +65,7 @@ public:
     }
 };
 
-BOOST_PYTHON_MODULE(forpy)
+BOOST_PYTHON_MODULE(forpy_saltbeziercurve)
 {
     Py_Initialize();
     np::initialize();
